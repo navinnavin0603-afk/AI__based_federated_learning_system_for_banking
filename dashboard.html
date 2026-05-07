@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Federated Fraud Shield | Pro Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+        .log-entry {
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .log-entry:hover {
+            border-left-color: var(--primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        .scan-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: scan 3s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-white/5 flex flex-col fixed h-screen bg-slate-950/50 backdrop-blur-xl z-50">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="bg-blue-600 p-2 rounded-xl">
+                    <i data-lucide="shield-check" class="text-white"></i>
+                </div>
+                <h1 class="font-extrabold text-xl tracking-tight">F1-SHIELD</h1>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="#" onclick="showView('dashboard')" id="nav-dashboard" class="sidebar-item active flex items-center gap-4 px-4 py-3 rounded-lg transition-all">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="#" onclick="showView('about')" id="nav-about" class="sidebar-item text-slate-400 flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/5 transition-all">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                    <span class="font-medium">About Project</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="mt-auto p-6">
+            <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-600/20">
+                <p class="text-xs text-blue-400 font-bold mb-1">PRIVACY BUDGET</p>
+                <div class="flex justify-between items-end">
+                    <h4 class="text-2xl font-bold">ε = 1.24</h4>
+                    <span class="text-[10px] text-blue-400/60 pb-1">δ = 1e-5</span>
+                </div>
+                <div class="w-full bg-blue-600/20 h-1.5 mt-3 rounded-full overflow-hidden">
+                    <div class="bg-blue-500 h-full" style="width: 65%"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+        <!-- Dashboard View -->
+        <div id="dashboard-view">
+        <!-- Top Bar -->
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h2 class="text-3xl font-bold mb-1">Unified Security Console</h2>
+                <p class="text-slate-400">Monitoring 3 Federated Shards in Real-Time</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="glass-panel px-5 py-2.5 rounded-2xl flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span class="font-bold text-sm" id="api-status">API: CONNECTED</span>
+                </div>
+                <button onclick="runInference()" class="glow-button bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-2xl font-bold flex items-center gap-3 transition-all">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                    Scan Network
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="check-circle" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">Accuracy</p>
+                <h3 class="text-2xl font-black text-emerald-400" id="global-accuracy">---</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="crosshair" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">Precision</p>
+                <h3 class="text-2xl font-black text-blue-400" id="global-precision">---</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="eye" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">Recall</p>
+                <h3 class="text-2xl font-black text-purple-400" id="global-recall">---</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="target" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">F1 Score</p>
+                <h3 class="text-2xl font-black text-orange-400" id="global-f1">---</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="users" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">Nodes</p>
+                <h3 class="text-2xl font-black text-slate-300" id="active-nodes">0 / 3</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
+                    <i data-lucide="refresh-cw" class="w-12 h-12"></i>
+                </div>
+                <p class="text-slate-400 text-[10px] font-bold mb-1 tracking-wider uppercase">Rounds</p>
+                <h3 class="text-2xl font-black text-slate-300" id="active-rounds">0 / 5</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left: Real Time Analysis -->
+            <div class="lg:col-span-8 flex flex-col gap-8">
+                <!-- NEW: Control Center -->
+                <div class="glass-panel rounded-[2rem] p-8 border-l-4 border-l-blue-600">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold flex items-center gap-3">
+                                <i data-lucide="terminal" class="text-blue-500"></i>
+                                Federated Control Center
+                            </h3>
+                            <p class="text-sm text-slate-400 mt-1">Orchestrate Server & 3 Sharded Clients</p>
+                        </div>
+                        <div id="train-status-badge" class="hidden px-4 py-1.5 rounded-full bg-blue-600/20 text-blue-400 text-xs font-bold animate-pulse">
+                            TRAINING IN PROGRESS
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button id="start-train-btn" onclick="startTraining()" class="flex-1 bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-600/50 px-6 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-3">
+                            <i data-lucide="play" class="w-5 h-5"></i>
+                            Initialize FL Session
+                        </button>
+                        <button onclick="window.location.reload()" class="bg-slate-900 hover:bg-slate-800 px-6 py-4 rounded-2xl font-bold border border-white/5 transition-all">
+                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-[2rem] overflow-hidden p-8 min-h-[400px] relative">
+                    <div id="scan-container" class="absolute inset-0 pointer-events-none hidden">
+                        <div class="scan-line w-full"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-10">
+                        <h3 class="text-xl font-bold flex items-center gap-3">
+                            <i data-lucide="cpu" class="text-blue-500"></i>
+                            Real-Time Anomaly Stream
+                        </h3>
+                        <span class="text-xs bg-slate-900 px-3 py-1 rounded-full text-slate-500 border border-white/5">LATENCY: 42ms</span>
+                    </div>
+
+                    <div id="inference-content">
+                        <!-- Default State -->
+                        <div id="placeholder" class="h-64 flex flex-col items-center justify-center text-slate-500 opacity-40">
+                            <i data-lucide="radar" class="w-20 h-20 mb-4"></i>
+                            <p class="font-medium">Waiting for network scan...</p>
+                        </div>
+
+                        <!-- Result State -->
+                        <div id="result-view" class="hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                <div class="p-6 rounded-3xl border border-white/5 bg-white/5" id="status-card">
+                                    <p class="text-xs font-bold text-slate-500 mb-2 tracking-widest uppercase">Classification</p>
+                                    <h4 class="text-4xl font-black mb-1" id="tx-status">---</h4>
+                                    <p class="text-slate-400 text-sm" id="tx-id">ID: ---</p>
+                                </div>
+                                <div class="p-6 rounded-3xl border border-white/5 bg-white/5">
+                                    <p class="text-xs font-bold text-slate-500 mb-2 tracking-widest uppercase">Confidence</p>
+                                    <h4 class="text-4xl font-black text-blue-400" id="tx-prob">0.00%</h4>
+                                    <div class="w-full bg-slate-900 h-2 mt-4 rounded-full overflow-hidden">
+                                        <div id="prob-bar" class="bg-blue-500 h-full transition-all duration-700" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-400 mb-6 flex items-center gap-2">
+                                    <i data-lucide="layers" class="w-4 h-4"></i>
+                                    EXPLAINABLE AI: INTEGRATED GRADIENTS ATTRIBUTION
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6" id="xai-grid">
+                                    <!-- XAI bars injected here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Logs -->
+                <div class="glass-panel rounded-[2rem] p-8">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i data-lucide="scroll-text" class="text-orange-400"></i>
+                        Security Event Log
+                    </h3>
+                    <div class="space-y-4 max-h-48 overflow-y-auto pr-4" id="event-logs">
+                        <div class="log-entry p-4 rounded-2xl flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs font-mono text-slate-500">00:15:22</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] bg-blue-600/20 text-blue-400 font-bold">INFO</span>
+                                <span class="text-sm">Federated Server initialized. Protocol: FedAvg</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                        </div>
+                        <!-- More logs will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Performance & Topology -->
+            <div class="lg:col-span-4 flex flex-col gap-8">
+                <!-- Accuracy Chart -->
+                <div class="glass-panel rounded-[2rem] p-8">
+                    <h3 class="text-lg font-bold mb-6">Model Convergence</h3>
+                    <div class="h-64">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Network Status -->
+                <div class="glass-panel rounded-[2rem] p-8">
+                    <h3 class="text-lg font-bold mb-6">Node Status</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                <span class="text-sm font-medium">Node 0 (Bank A)</span>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-400" id="node-0-acc">---</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                <span class="text-sm font-medium">Node 1 (Bank B)</span>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-400" id="node-1-acc">---</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                <span class="text-sm font-medium">Node 2 (Bank C)</span>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-400" id="node-2-acc">---</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 pt-8 border-t border-white/5 space-y-4">
+                        <div class="flex gap-3 items-start p-3 rounded-2xl bg-slate-900/50">
+                            <div class="bg-blue-600/20 p-2 rounded-lg text-blue-400">
+                                <i data-lucide="lock" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold">Differential Privacy</p>
+                                <p class="text-[10px] text-slate-400">Noise: 1.1 | Max Norm: 1.0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About View -->
+        <div id="about-view" class="hidden animate-in fade-in duration-700">
+            <div class="max-w-4xl">
+                <h2 class="text-4xl font-black mb-2">About Federated Fraud Shield</h2>
+                <p class="text-slate-400 mb-12">Building the future of secure, multi-institution financial intelligence.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-t-blue-600">
+                        <i data-lucide="share-2" class="text-blue-500 mb-4 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold mb-4">Federated Learning</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Unlike traditional AI, our system never requires banks to share their raw transaction data. 
+                            Instead, the model travels to the data. Only mathematical weight updates are shared, 
+                            ensuring absolute data sovereignty for each institution.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-t-emerald-600">
+                        <i data-lucide="lock" class="text-emerald-500 mb-4 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold mb-4">Differential Privacy</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Using the Opacus Privacy Engine, we inject calibrated mathematical noise into the training process. 
+                            This provides a formal guarantee (Epsilon-Delta privacy) that no individual transaction can ever 
+                            be reverse-engineered from the global model.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-t-orange-600">
+                        <i data-lucide="eye" class="text-orange-500 mb-4 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold mb-4">Explainable AI (XAI)</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Transparency is key in financial compliance. Our Integrated Gradients implementation 
+                            visualizes exactly why a transaction was flagged as fraudulent, highlighting feature 
+                            attributions for every single inference.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-t-purple-600">
+                        <i data-lucide="shield-check" class="text-purple-500 mb-4 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold mb-4">Secure Sharding</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Data is dynamically sharded into independent nodes, mimicking a real-world sharded 
+                            financial network. This allows for massive scaling while maintaining strict 
+                            architectural boundaries between data controllers.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-12 p-8 glass-panel rounded-[2rem] bg-blue-600/5">
+                    <h3 class="text-lg font-bold mb-2">Technical Stack</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-1.5 rounded-full bg-slate-900 text-xs font-mono border border-white/5">PyTorch 2.0+</span>
+                        <span class="px-4 py-1.5 rounded-full bg-slate-900 text-xs font-mono border border-white/5">Flower (FLWR)</span>
+                        <span class="px-4 py-1.5 rounded-full bg-slate-900 text-xs font-mono border border-white/5">Opacus DP</span>
+                        <span class="px-4 py-1.5 rounded-full bg-slate-900 text-xs font-mono border border-white/5">Captum XAI</span>
+                        <span class="px-4 py-1.5 rounded-full bg-slate-900 text-xs font-mono border border-white/5">Flask Backend</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // View Switching
+        function showView(viewId) {
+            const dashboard = document.getElementById('dashboard-view');
+            const about = document.getElementById('about-view');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const navAbout = document.getElementById('nav-about');
+
+            if (viewId === 'dashboard') {
+                dashboard.classList.remove('hidden');
+                about.classList.add('hidden');
+                navDashboard.classList.add('active');
+                navDashboard.classList.remove('text-slate-400');
+                navAbout.classList.remove('active');
+                navAbout.classList.add('text-slate-400');
+            } else {
+                dashboard.classList.add('hidden');
+                about.classList.remove('hidden');
+                navDashboard.classList.remove('active');
+                navDashboard.classList.add('text-slate-400');
+                navAbout.classList.add('active');
+                navAbout.classList.remove('text-slate-400');
+            }
+            lucide.createIcons();
+        }
+
+        // Chart.js Configuration
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['R1', 'R2', 'R3', 'R4', 'R5'],
+                datasets: [{
+                    label: 'Global Accuracy',
+                    data: [0.65, 0.78, 0.85, 0.94, 0.98],
+                    borderColor: '#3b82f6',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: (context) => {
+                        const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 300);
+                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                        return gradient;
+                    },
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { 
+                        beginAtZero: false, 
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#64748b', font: { size: 10 } } 
+                    },
+                    x: { 
+                        grid: { display: false },
+                        ticks: { color: '#64748b', font: { size: 10 } } 
+                    }
+                }
+            }
+        });
+
+        // Backend Connectivity
+        async function checkHealth() {
+            const statusLabel = document.getElementById('api-status');
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/status');
+                const data = await res.json();
+                
+                if (res.ok) {
+                    statusLabel.innerText = 'API: CONNECTED';
+                    statusLabel.className = 'font-bold text-sm text-emerald-400';
+                    
+                    // Update Dynamic Metrics
+                    document.getElementById('global-accuracy').innerText = (data.accuracy * 100).toFixed(2) + '%';
+                    document.getElementById('global-precision').innerText = (data.precision * 100).toFixed(2) + '%';
+                    document.getElementById('global-recall').innerText = (data.recall * 100).toFixed(2) + '%';
+                    document.getElementById('global-f1').innerText = data.f1.toFixed(3);
+                    document.getElementById('active-rounds').innerText = `${data.round} / 5`;
+                    
+                    // Show real active node count from backend
+                    document.getElementById('active-nodes').innerText = `${data.active_nodes} / 3`;
+                    
+                    // Update Individual Node Accuracies
+                    if (data.node_metrics) {
+                        if (data.node_metrics["Node 0"]) document.getElementById('node-0-acc').innerText = (data.node_metrics["Node 0"].accuracy * 100).toFixed(2) + '%';
+                        if (data.node_metrics["Node 1"]) document.getElementById('node-1-acc').innerText = (data.node_metrics["Node 1"].accuracy * 100).toFixed(2) + '%';
+                        if (data.node_metrics["Node 2"]) document.getElementById('node-2-acc').innerText = (data.node_metrics["Node 2"].accuracy * 100).toFixed(2) + '%';
+                    }
+                }
+            } catch (e) {
+                statusLabel.innerText = 'API: OFFLINE';
+                statusLabel.className = 'font-bold text-sm text-red-500';
+            }
+        }
+        setInterval(checkHealth, 5000);
+        checkHealth();
+
+        function addLog(message, type = 'INFO') {
+            const container = document.getElementById('event-logs');
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const colors = {
+                'INFO': 'bg-blue-600/20 text-blue-400',
+                'WARN': 'bg-warning/20 text-warning',
+                'DANGER': 'bg-danger/20 text-danger'
+            };
+            const log = `
+                <div class="log-entry p-4 rounded-2xl flex items-center justify-between opacity-0 translate-y-2 animate-in fade-in slide-in-from-bottom duration-500 fill-mode-forwards">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs font-mono text-slate-500">${time}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] ${colors[type]} font-bold">${type}</span>
+                        <span class="text-sm">${message}</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                </div>
+            `;
+            container.insertAdjacentHTML('afterbegin', log);
+            lucide.createIcons();
+        }
+
+        // Training Control
+        async function startTraining() {
+            const btn = document.getElementById('start-train-btn');
+            btn.disabled = true;
+            addLog("Sending command to orchestrate Federated session...", "INFO");
+
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/train/start', { method: 'POST' });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    addLog(data.message, "SUCCESS");
+                    pollTrainingStatus();
+                } else {
+                    addLog(data.message, "WARN");
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                addLog("Failed to contact backend controller.", "DANGER");
+                btn.disabled = false;
+            }
+        }
+
+        async function pollTrainingStatus() {
+            const badge = document.getElementById('train-status-badge');
+            const btn = document.getElementById('start-train-btn');
+            
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/train/status');
+                const data = await res.json();
+                
+                if (data.in_progress) {
+                    badge.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.innerText = "Training Shards...";
+                    setTimeout(pollTrainingStatus, 3000);
+                } else {
+                    if (!badge.classList.contains('hidden')) {
+                        addLog("Federated Training Cycle Complete.", "SUCCESS");
+                    }
+                    badge.classList.add('hidden');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="play" class="w-5 h-5"></i> Initialize FL Session';
+                    lucide.createIcons();
+                }
+            } catch (e) {}
+        }
+        pollTrainingStatus(); // Start polling on load
+
+        async function runInference() {
+            const scanLine = document.getElementById('scan-container');
+            const placeholder = document.getElementById('placeholder');
+            const resultView = document.getElementById('result-view');
+            
+            scanLine.classList.remove('hidden');
+            addLog("Initiating full network anomaly scan...");
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/inference');
+                const data = await response.json();
+                
+                // Show Result View
+                placeholder.classList.add('hidden');
+                resultView.classList.remove('hidden');
+
+                // Update Data
+                document.getElementById('tx-id').innerText = `ID: ${data.transaction_id}`;
+                document.getElementById('tx-status').innerText = data.status;
+                document.getElementById('tx-prob').innerText = (data.fraud_probability * 100).toFixed(2) + '%';
+                document.getElementById('prob-bar').style.width = (data.fraud_probability * 100) + '%';
+
+                const statusCard = document.getElementById('status-card');
+                if(data.status === 'FRAUD') {
+                    statusCard.className = 'p-6 rounded-3xl border border-red-500/50 bg-red-500/10 animate-pulse';
+                    document.getElementById('tx-status').className = 'text-4xl font-black mb-1 text-red-500';
+                    addLog(`CRITICAL: Anomaly detected in ${data.transaction_id}`, 'DANGER');
+                } else {
+                    statusCard.className = 'p-6 rounded-3xl border border-emerald-500/50 bg-emerald-500/10';
+                    document.getElementById('tx-status').className = 'text-4xl font-black mb-1 text-emerald-400';
+                    addLog(`Packet ${data.transaction_id} verified as normal.`);
+                }
+
+                // Update XAI Grid
+                const xaiContainer = document.getElementById('xai-grid');
+                xaiContainer.innerHTML = '';
+                const features = ['Time', 'V1', 'V2', 'V3', 'Amount'];
+                data.xai_importance.forEach((val, i) => {
+                    const pct = (val * 100).toFixed(1);
+                    xaiContainer.innerHTML += `
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-slate-400">${features[i]}</span>
+                                <span class="font-bold text-blue-400">${pct}% Influence</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-blue-600 h-full transition-all duration-1000" style="width: ${Math.min(val*500, 100)}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                addLog("Communication failure with Backend Bridge.", "DANGER");
+            } finally {
+                setTimeout(() => scanLine.classList.add('hidden'), 1000);
+            }
+        }
+    </script>
+</body>
+</html>

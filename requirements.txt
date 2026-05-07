@@ -1,0 +1,10 @@
+flwr==1.7.0
+torch
+pandas
+scikit-learn
+opacus
+captum
+flask
+flask-cors
+
+
