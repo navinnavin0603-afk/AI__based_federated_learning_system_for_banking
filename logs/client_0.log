@@ -1,0 +1,177 @@
+W0507 10:54:49.327000 27588 torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+C:\Users\navin\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\opacus\privacy_engine.py:98: UserWarning: Secure RNG turned off. This is perfectly fine for experimentation as it allows for much faster training performance, but remember to turn it on and retrain one last time before production with ``secure_mode`` turned on.
+  warnings.warn(
+[93mWARNING [0m:   DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+05/07/2026 10:54:52:WARNING:DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+[93mWARNING [0m:   DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+05/07/2026 10:54:52:WARNING:DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+05/07/2026 10:54:52:DEBUG:Using InMemoryObjectStore
+05/07/2026 10:54:52:DEBUG:Opened insecure gRPC connection (no certificates were passed)
+05/07/2026 10:54:52:DEBUG:ChannelConnectivity.IDLE
+05/07/2026 10:54:52:DEBUG:ChannelConnectivity.CONNECTING
+05/07/2026 10:54:52:DEBUG:ChannelConnectivity.READY
+[92mINFO [0m:      
+05/07/2026 10:54:52:INFO:
+[92mINFO [0m:      Received: train message 7b5e6e0a-b941-4023-ae65-fc9990c82b36
+05/07/2026 10:54:52:INFO:Received: train message 7b5e6e0a-b941-4023-ae65-fc9990c82b36
+C:\Users\navin\OneDrive\Desktop\f1_project\client.py:56: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  loss.backward()
+[92mINFO [0m:      Sent reply
+05/07/2026 10:55:17:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:55:17:INFO:
+[92mINFO [0m:      Received: evaluate message e4815589-a330-4e5a-93e3-5c038bd53058
+05/07/2026 10:55:17:INFO:Received: evaluate message e4815589-a330-4e5a-93e3-5c038bd53058
+[92mINFO [0m:      Sent reply
+05/07/2026 10:55:17:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:55:17:INFO:
+[92mINFO [0m:      Received: train message aecbef7a-b3f2-4ff7-a7fc-4f99aae7bd06
+05/07/2026 10:55:17:INFO:Received: train message aecbef7a-b3f2-4ff7-a7fc-4f99aae7bd06
+C:\Users\navin\OneDrive\Desktop\f1_project\client.py:56: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  loss.backward()
+[92mINFO [0m:      Sent reply
+05/07/2026 10:55:45:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:55:45:INFO:
+[92mINFO [0m:      Received: evaluate message 6ac0dbab-9ebf-4e15-a4dd-b4251eb1a291
+05/07/2026 10:55:45:INFO:Received: evaluate message 6ac0dbab-9ebf-4e15-a4dd-b4251eb1a291
+[92mINFO [0m:      Sent reply
+05/07/2026 10:55:45:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:55:45:INFO:
+[92mINFO [0m:      Received: train message 349e54a1-d51a-4ee5-b7d2-62c63eb51357
+05/07/2026 10:55:45:INFO:Received: train message 349e54a1-d51a-4ee5-b7d2-62c63eb51357
+C:\Users\navin\OneDrive\Desktop\f1_project\client.py:56: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  loss.backward()
+[92mINFO [0m:      Sent reply
+05/07/2026 10:56:14:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:56:15:INFO:
+[92mINFO [0m:      Received: evaluate message 7c28f103-aab5-4954-8eaa-a38c5c38e591
+05/07/2026 10:56:15:INFO:Received: evaluate message 7c28f103-aab5-4954-8eaa-a38c5c38e591
+[92mINFO [0m:      Sent reply
+05/07/2026 10:56:15:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:56:15:INFO:
+[92mINFO [0m:      Received: train message 8e86451d-12c3-45c9-a721-e3c6bc909f21
+05/07/2026 10:56:15:INFO:Received: train message 8e86451d-12c3-45c9-a721-e3c6bc909f21
+C:\Users\navin\OneDrive\Desktop\f1_project\client.py:56: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  loss.backward()
+[92mINFO [0m:      Sent reply
+05/07/2026 10:56:47:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:56:47:INFO:
+[92mINFO [0m:      Received: evaluate message 9c6cb359-bc85-4ce7-ad9b-4f280918ae69
+05/07/2026 10:56:47:INFO:Received: evaluate message 9c6cb359-bc85-4ce7-ad9b-4f280918ae69
+[92mINFO [0m:      Sent reply
+05/07/2026 10:56:47:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:56:47:INFO:
+[92mINFO [0m:      Received: train message 531dd914-7591-4c20-9a3d-6a674d5eeab8
+05/07/2026 10:56:47:INFO:Received: train message 531dd914-7591-4c20-9a3d-6a674d5eeab8
+C:\Users\navin\OneDrive\Desktop\f1_project\client.py:56: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  loss.backward()
+[92mINFO [0m:      Sent reply
+05/07/2026 10:57:22:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:57:22:INFO:
+[92mINFO [0m:      Received: evaluate message 409dc4ad-b2f7-4bbf-b6c1-d8fd429315bb
+05/07/2026 10:57:22:INFO:Received: evaluate message 409dc4ad-b2f7-4bbf-b6c1-d8fd429315bb
+[92mINFO [0m:      Sent reply
+05/07/2026 10:57:22:INFO:Sent reply
+[92mINFO [0m:      
+05/07/2026 10:57:22:INFO:
+[92mINFO [0m:      Received: reconnect message 4f57f182-682d-49b2-8e32-8660c0ef4ecf
+05/07/2026 10:57:22:INFO:Received: reconnect message 4f57f182-682d-49b2-8e32-8660c0ef4ecf
+05/07/2026 10:57:22:DEBUG:gRPC channel closed
+[92mINFO [0m:      Disconnect and shut down
+05/07/2026 10:57:22:INFO:Disconnect and shut down
+Starting Sophisticated FL Client (ID: 0, Total: 3)...
+Client 0 loaded shard: 0 to 94935 (94935 samples)
+Client fitting (training with Differential Privacy)...
+Privacy Budget spent: (epsilon = 0.08, delta = 1e-5)
+Client evaluating (Anomaly Detection Metrics)...
+Metrics - Accuracy: 0.9978, Precision: 0.0000, Recall: 0.0000, F1: 0.0000
+Running XAI (Integrated Gradients) for feature importance...
+XAI Warning: Could not complete explanation (Error(s) in loading state_dict for FraudModel:
+	Missing key(s) in state_dict: "fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias", "fc3.weight", "fc3.bias". 
+	Unexpected key(s) in state_dict: "_module.fc1.weight", "_module.fc1.bias", "_module.fc2.weight", "_module.fc2.bias", "_module.fc3.weight", "_module.fc3.bias". )
+Client fitting (training with Differential Privacy)...
+Privacy Budget spent: (epsilon = 0.12, delta = 1e-5)
+Client evaluating (Anomaly Detection Metrics)...
+Metrics - Accuracy: 0.9978, Precision: 0.0000, Recall: 0.0000, F1: 0.0000
+Running XAI (Integrated Gradients) for feature importance...
+XAI Warning: Could not complete explanation (Error(s) in loading state_dict for FraudModel:
+	Missing key(s) in state_dict: "fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias", "fc3.weight", "fc3.bias". 
+	Unexpected key(s) in state_dict: "_module.fc1.weight", "_module.fc1.bias", "_module.fc2.weight", "_module.fc2.bias", "_module.fc3.weight", "_module.fc3.bias". )
+Client fitting (training with Differential Privacy)...
+Privacy Budget spent: (epsilon = 0.14, delta = 1e-5)
+Client evaluating (Anomaly Detection Metrics)...
+Metrics - Accuracy: 0.9978, Precision: 0.0000, Recall: 0.0000, F1: 0.0000
+Running XAI (Integrated Gradients) for feature importance...
+XAI Warning: Could not complete explanation (Error(s) in loading state_dict for FraudModel:
+	Missing key(s) in state_dict: "fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias", "fc3.weight", "fc3.bias". 
+	Unexpected key(s) in state_dict: "_module.fc1.weight", "_module.fc1.bias", "_module.fc2.weight", "_module.fc2.bias", "_module.fc3.weight", "_module.fc3.bias". )
+Client fitting (training with Differential Privacy)...
+Privacy Budget spent: (epsilon = 0.16, delta = 1e-5)
+Client evaluating (Anomaly Detection Metrics)...
+Metrics - Accuracy: 0.9978, Precision: 0.0000, Recall: 0.0000, F1: 0.0000
+Running XAI (Integrated Gradients) for feature importance...
+XAI Warning: Could not complete explanation (Error(s) in loading state_dict for FraudModel:
+	Missing key(s) in state_dict: "fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias", "fc3.weight", "fc3.bias". 
+	Unexpected key(s) in state_dict: "_module.fc1.weight", "_module.fc1.bias", "_module.fc2.weight", "_module.fc2.bias", "_module.fc3.weight", "_module.fc3.bias". )
+Client fitting (training with Differential Privacy)...
+Privacy Budget spent: (epsilon = 0.18, delta = 1e-5)
+Client evaluating (Anomaly Detection Metrics)...
+Metrics - Accuracy: 0.9978, Precision: 0.0000, Recall: 0.0000, F1: 0.0000
+Running XAI (Integrated Gradients) for feature importance...
+XAI Warning: Could not complete explanation (Error(s) in loading state_dict for FraudModel:
+	Missing key(s) in state_dict: "fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias", "fc3.weight", "fc3.bias". 
+	Unexpected key(s) in state_dict: "_module.fc1.weight", "_module.fc1.bias", "_module.fc2.weight", "_module.fc2.bias", "_module.fc3.weight", "_module.fc3.bias". )
